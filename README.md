@@ -17,6 +17,40 @@ CampusPilot AI is an AI-powered student productivity dashboard designed to help 
 - **Study Streak Tracker** – Build consistent study habits.
 - **Achievement System** – Celebrate learning milestones.
 - **AI Task Prioritization** – Identify which tasks deserve attention first.
+- 
+- ## 📸 Application Screenshots
+
+Explore the different features of CampusPilot AI:
+
+### 1. Daily Study Goal
+![Daily Study Goal](screenshots/dailystudygoal.png)
+
+### 2. AI Study Planner
+![AI Study Planner](screenshots/aistudyplann.png)
+
+### 3. AI Chat Assistant
+![AI Chat Assistant](screenshots/aichatboat.png)
+
+### 4. AI Focus Coach
+![AI Focus Coach](screenshots/aicoach.png)
+
+### 5. Monthly Analytics
+![Monthly Analytics](screenshots/montalyanalysis.png)
+
+### 6. Weekly Progress
+![Weekly Progress](screenshots/weeklyprogress.png)
+
+### 7. Study Streak Tracker
+![Study Streak](screenshots/studystreak.png)
+
+### 8. Achievement System
+![Achievements](screenshots/achievementgoal.png)
+
+### 9. Time Tracker
+![Time Tracker](screenshots/timetraker.png)
+
+### 10. Performance Insights
+![Performance Insights](screenshots/performanceinsight.png)
 
 ## 🛠️ Tech Stack
 
