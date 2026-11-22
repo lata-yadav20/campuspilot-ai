@@ -1,0 +1,42 @@
+
+{
+  "schema": 4,
+  "required_executas": [
+    {
+      "tool_id": "tool-dev-campuspilot-ai"
+    }
+  ],
+  "tags": ["campuspilot-ai"],
+  "ui": {
+
+
+    "bundle": {
+      "format": "static-spa",
+      "entry": "index.html",
+      "external_origins": []
+    },
+    "views": [
+      {
+        "name": "main",
+        "title": "CampusPilot AI",
+        "default": true,
+        "default_size": {
+          "w": 1100,
+          "h": 800
+        },
+        "min_size": {
+          "w": 600,
+          "h": 500
+        },
+        "resizable": true
+      }
+    ],
+    "csp_overrides": {},
+    "state_merge": "last_writer_wins"
+  },
+  "dev": {
+    "fixtures": ["fixtures/*.jsonl"],
+    "seed_storage": {},
+    "user_id": 1
+  }
+}

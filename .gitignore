@@ -1,0 +1,9 @@
+
+# Local Anna development settings
+.anna/
+
+# macOS files
+.DS_Store
+
+# Backup files
+*backup*

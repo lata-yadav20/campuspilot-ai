@@ -1,0 +1,1339 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusPilot AI</title>
+  <script src="./app.js" type="module"></script>
+
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #0b1020;
+    color: #eef2ff;
+  }
+
+  .app {
+    width: 100%;
+    min-height: 100vh;
+    padding: 32px;
+  }
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .brand {
+    font-size: 23px;
+    font-weight: 750;
+    color: #a99bff;
+  }
+
+  .tag {
+    background: #252044;
+    color: #b9adff;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+  }
+
+  h1 {
+    margin: 32px 0 6px;
+    font-size: 30px;
+  }
+
+  .muted { color: #9aa7c2; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    margin-top: 32px;
+  }
+
+  .card {
+    background: #171f35;
+    padding: 22px;
+    border-radius: 16px;
+    border: 1px solid #293653;
+    min-width: 0;
+  }
+
+  .card h3 { margin: 0 0 8px; }
+
+  .card p {
+    color: #a4aec5;
+    font-size: 14px;
+  }
+
+  input, button { font: inherit; }
+
+  input {
+    width: 100%;
+    padding: 12px;
+    background: #0f172a;
+    color: #eef2ff;
+    border: 1px solid #34415e;
+    border-radius: 9px;
+    margin: 8px 0;
+  }
+
+  input::placeholder { color: #8290aa; }
+
+  button {
+    background: #7867ed;
+    color: white;
+    border: 0;
+    padding: 11px 16px;
+    border-radius: 9px;
+    cursor: pointer;
+    margin: 4px 4px 4px 0;
+  }
+
+  button:hover { background: #6251d6; }
+
+  button.secondary {
+    background: #292449;
+    color: #c3baff;
+  }
+
+  button.danger { background: #b94355; }
+
+  .task, .activity {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #293653;
+    flex-wrap: wrap;
+  }
+
+  .task-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .task-info input {
+    width: auto;
+    margin: 0;
+  }
+
+  .completed {
+    text-decoration: line-through;
+    color: #8792a5;
+  }
+
+  .activity-details { flex: 1; }
+
+  .time-label {
+    display: block;
+    font-size: 12px;
+    color: #9aa7c2;
+  }
+
+  #timer-display {
+    font-size: 30px;
+    font-weight: 700;
+    color: #9b8cff;
+  }
+
+  #status {
+    font-size: 13px;
+    color: #a99bff;
+    white-space: pre-wrap;
+    margin-top: 24px;
+  }
+
+  label {
+    display: block;
+    font-size: 13px;
+    color: #aab5cc;
+    margin-top: 8px;
+  }
+
+  /* Premium AI Focus Coach */
+
+  .coach-card {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, #1c2340, #211b40);
+    border: 1px solid #51418b;
+    padding: 28px;
+    box-shadow: 0 8px 30px rgba(80, 60, 180, 0.12);
+  }
+
+  .coach-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .coach-tag {
+    display: inline-block;
+    color: #b9aaff;
+    background: #302653;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+
+  .coach-header h3 {
+    font-size: 22px;
+    margin: 14px 0 6px;
+  }
+
+  .coach-icon {
+    width: 64px;
+    height: 64px;
+    display: grid;
+    place-items: center;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #7965ed, #3989e8);
+    color: white;
+    font-size: 32px;
+  }
+
+  .coach-content {
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: 14px;
+    background: rgba(10, 15, 35, 0.55);
+    border: 1px solid #37345e;
+  }
+
+  #coach-button {
+    background: linear-gradient(90deg, #7965ed, #4388e8);
+    font-weight: 650;
+    padding: 13px 22px;
+  }
+
+  #coach-output {
+    color: #d5dcf0;
+    line-height: 1.8;
+    font-size: 14px;
+    white-space: pre-wrap;
+    margin-top: 18px;
+  }
+
+
+  @media (max-width: 700px) {
+    .app { padding: 16px; }
+    .grid { grid-template-columns: 1fr; }
+    h1 { font-size: 25px; }
+  }
+
+
+
+
+
+
+
+/* ===== CAMPUSPILOT PREMIUM DASHBOARD ===== */
+
+.app {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 40px;
+}
+
+header {
+  padding: 18px 24px;
+  background: rgba(23, 31, 53, 0.85);
+  border: 1px solid #293653;
+  border-radius: 16px;
+  backdrop-filter: blur(16px);
+}
+
+.brand {
+  letter-spacing: -0.7px;
+}
+
+h1 {
+  font-size: clamp(30px, 4vw, 42px);
+  letter-spacing: -1.5px;
+  background: linear-gradient(90deg, #ffffff, #a99bff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 22px;
+}
+
+.analytics-card,
+.coach-card {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 700px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+
+.card {
+  background: linear-gradient(145deg, #19233b, #121a2e);
+  border: 1px solid rgba(137, 123, 255, 0.16);
+  border-radius: 20px;
+  padding: 26px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.18);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(137, 123, 255, 0.45);
+}
+
+.card h3 {
+  font-size: 19px;
+  letter-spacing: -0.3px;
+}
+
+.card h4 {
+  margin-top: 24px;
+  color: #c5bcff;
+}
+
+input {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus {
+  outline: none;
+  border-color: #8875ff;
+  box-shadow: 0 0 0 3px rgba(136, 117, 255, 0.15);
+}
+
+button {
+  transition: transform 0.2s ease, filter 0.2s ease;
+  font-weight: 600;
+}
+
+button:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.12);
+}
+
+.tasks-card {
+  background: linear-gradient(145deg, #1b2540, #171d34);
+}
+
+.tasks-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.tasks-icon {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: rgba(121, 101, 237, 0.2);
+  color: #b9aaff;
+  font-size: 24px;
+}
+
+.task-progress-info {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 22px 0 10px;
+  font-size: 13px;
+  color: #b9c4dc;
+}
+
+.progress-track {
+  height: 9px;
+  background: #293653;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #7965ed, #3989e8);
+  border-radius: inherit;
+  transition: width 0.3s ease;
+}
+
+.task-input-area {
+  margin-top: 18px;
+}
+
+.analytics-card {
+  background: linear-gradient(145deg, #1b2540, #171b31);
+}
+
+.coach-card {
+  border-radius: 22px;
+  background: linear-gradient(135deg, #211e42, #192a49);
+}
+
+#timer-display {
+  font-size: 44px;
+  letter-spacing: 2px;
+  margin: 24px 0;
+}
+
+#status {
+  padding: 14px 18px;
+  background: rgba(121, 101, 237, 0.08);
+  border: 1px solid rgba(121, 101, 237, 0.2);
+  border-radius: 12px;
+}
+
+@media (max-width: 700px) {
+  .app {
+    padding: 16px;
+  }
+
+  header {
+    padding: 16px;
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  #timer-display {
+    font-size: 36px;
+  }
+}
+/* Dashboard section arrangement */
+
+.grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.tasks-card,
+.analytics-card,
+.timer-card,
+.coach-card {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 700px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+/* ===== WELCOME SECTION ===== */
+
+.welcome-section {
+  margin: 48px 0 36px;
+  padding: 34px 0;
+}
+
+.welcome-section .coach-tag {
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+.welcome-section h1 {
+  font-size: clamp(32px, 4vw, 46px);
+  line-height: 1.2;
+  max-width: 750px;
+  margin: 12px 0;
+}
+
+.welcome-section p {
+  font-size: 16px;
+  line-height: 1.7;
+  margin-top: 12px;
+}
+
+@media (max-width: 700px) {
+  .welcome-section {
+    margin: 28px 0;
+    padding: 16px 0;
+  }
+}
+
+/* ===== DASHBOARD OVERVIEW CARDS ===== */
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  margin: 10px 0 30px;
+}
+
+.overview-card {
+  padding: 22px;
+  border-radius: 18px;
+  background: linear-gradient(145deg, #192743, #121a2e);
+  border: 1px solid rgba(137, 123, 255, 0.2);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.overview-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(137, 123, 255, 0.5);
+}
+
+.overview-icon {
+  font-size: 25px;
+  color: #a99bff;
+}
+
+.overview-card p {
+  margin: 14px 0 8px;
+  color: #aab5cc;
+  font-size: 13px;
+}
+
+.overview-card h2 {
+  margin: 0;
+  font-size: 27px;
+  color: #ffffff;
+}
+/* ===== DAILY STUDY GOAL ===== */
+.daily-goal-card {
+  margin-bottom: 25px;
+}
+
+.goal-progress-track {
+  width: 100%;
+  height: 12px;
+  background: #27334d;
+  border-radius: 20px;
+  overflow: hidden;
+  margin: 18px 0 10px;
+}
+
+.goal-progress-fill {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #897bff, #43d9bd);
+  border-radius: 20px;
+  transition: width 0.5s ease;
+}
+
+#daily-goal-message {
+  margin-top: 10px;
+}
+
+@media (max-width: 900px) {
+  .overview-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .overview-grid {
+    grid-template-columns: 1fr;
+  }
+}
+/* ===== SMART STUDY SUGGESTIONS ===== */
+.smart-suggestions {
+  margin-top: 22px;
+  padding: 20px;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #192743, #121a2e);
+  border: 1px solid rgba(137, 123, 255, 0.25);
+}
+
+.smart-suggestions h4 {
+  color: #a99bff;
+  margin: 0 0 12px;
+}
+
+#smart-suggestion-output {
+  color: #d3dced;
+  line-height: 1.7;
+  margin: 0;
+}
+/* ===== STUDY STREAK TRACKER ===== */
+
+.streak-card {
+  margin: 10px 0 30px;
+  padding: 24px;
+  border-radius: 18px;
+  background: linear-gradient(145deg, #192743, #121a2e);
+  border: 1px solid rgba(137, 123, 255, 0.25);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.15);
+}
+
+.streak-header h3 {
+  margin: 12px 0 6px;
+  color: #ffffff;
+  font-size: 22px;
+}
+
+.streak-header p {
+  color: #aab5cc;
+  margin: 0;
+}
+
+.streak-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  margin: 24px 0;
+}
+
+.streak-stats > div {
+  padding: 18px;
+  border-radius: 14px;
+  background: rgba(25, 39, 67, 0.8);
+}
+
+.streak-stats p {
+  color: #aab5cc;
+  margin: 0 0 8px;
+}
+
+.streak-stats h2 {
+  color: #ffffff;
+  margin: 0;
+  font-size: 26px;
+}
+
+.streak-card h4 {
+  color: #a99bff;
+  margin-bottom: 14px;
+}
+
+.streak-calendar {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.streak-day {
+  text-align: center;
+  padding: 14px 5px;
+  border-radius: 12px;
+  background: #27334d;
+  color: #aab5cc;
+}
+
+.streak-day.active {
+  background: rgba(67, 217, 189, 0.18);
+  border: 1px solid #43d9bd;
+  color: #43d9bd;
+}
+
+.streak-day span {
+  display: block;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.streak-day strong {
+  font-size: 18px;
+}
+
+@media (max-width: 480px) {
+  .streak-calendar {
+    gap: 5px;
+  }
+
+  .streak-day {
+    padding: 10px 2px;
+  }
+}
+/* ===== POMODORO FOCUS TIMER ===== */
+
+.pomodoro-card {
+  margin-top: 25px;
+  text-align: center;
+}
+
+.pomodoro-card h3 {
+  color: #ffffff;
+  margin-top: 14px;
+}
+
+.pomodoro-card > p {
+  color: #aab5cc;
+}
+
+.pomodoro-modes,
+.pomodoro-controls {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.pomodoro-modes button {
+  background: #27334d;
+  color: #d3dced;
+}
+
+.pomodoro-modes button.active {
+  background: #897bff;
+  color: white;
+}
+
+#pomodoro-display {
+  font-size: 64px;
+  font-weight: 700;
+  color: #43d9bd;
+  margin: 25px 0 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+#pomodoro-status {
+  color: #aab5cc;
+  margin-bottom: 20px;
+}
+
+#pomodoro-sessions {
+  margin-top: 20px;
+  color: #a99bff;
+  font-weight: 600;
+}
+
+@media (max-width: 480px) {
+  #pomodoro-display {
+    font-size: 48px;
+  }
+}
+/* ===== ACHIEVEMENT SYSTEM ===== */
+.achievement-card {
+  margin-top: 25px;
+}
+
+.achievement-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 15px;
+  margin-top: 22px;
+}
+
+.achievement-item {
+  padding: 18px;
+  border-radius: 14px;
+  background: #27334d;
+  border: 1px solid rgba(137, 123, 255, 0.2);
+}
+
+.achievement-item.unlocked {
+  border-color: #43d9bd;
+  background: rgba(67, 217, 189, 0.1);
+}
+
+.achievement-icon {
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+
+.achievement-item h4 {
+  color: #ffffff;
+  margin: 8px 0;
+}
+
+.achievement-item p {
+  color: #aab5cc;
+  font-size: 13px;
+}
+
+.achievement-status {
+  color: #43d9bd;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+#achievement-summary {
+  color: #a99bff;
+  margin-top: 20px;
+  font-weight: 600;
+}
+/* ===== AI TASK PRIORITIZATION ===== */
+.ai-priority-section {
+  margin-top: 22px;
+  padding: 20px;
+  border-radius: 14px;
+  background: rgba(25, 39, 67, 0.8);
+  border: 1px solid rgba(137, 123, 255, 0.25);
+}
+
+.ai-priority-section h3 {
+  color: #ffffff;
+  margin: 12px 0 8px;
+}
+
+.ai-priority-section p {
+  color: #aab5cc;
+}
+
+#task-priority-output {
+  margin-top: 18px;
+  color: #d3dced;
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+
+/* ===== AI DAILY PERFORMANCE INSIGHTS ===== */
+.ai-insights-card {
+  margin-top: 25px;
+}
+
+.ai-insights-card h3 {
+  color: #ffffff;
+  margin: 14px 0 8px;
+}
+
+.ai-insights-card > p {
+  color: #aab5cc;
+}
+
+#ai-insights-output {
+  margin-top: 20px;
+  padding: 18px;
+  border-radius: 14px;
+  background: rgba(25, 39, 67, 0.8);
+  color: #d3dced;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+/* ===== AI PERSONALIZED RECOMMENDATIONS ===== */
+
+#generate-smart-suggestions {
+  margin-top: 15px;
+  width: 100%;
+}
+
+#smart-suggestion-output {
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+/* ===== AI CHAT STUDY ASSISTANT ===== */
+
+.ai-chat-card {
+  margin-top: 25px;
+}
+
+#ai-chat-messages {
+  margin-top: 20px;
+  padding: 16px;
+  max-height: 350px;
+  min-height: 120px;
+  overflow-y: auto;
+  border-radius: 14px;
+  background: rgba(25, 39, 67, 0.8);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ai-chat-message {
+  max-width: 85%;
+  padding: 12px 15px;
+  border-radius: 12px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.ai-chat-message.assistant {
+  align-self: flex-start;
+  background: #27334d;
+  color: #d3dced;
+}
+
+.ai-chat-message.user {
+  align-self: flex-end;
+  background: #5146a8;
+  color: #ffffff;
+}
+
+.ai-chat-input {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.ai-chat-input input {
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 480px) {
+  .ai-chat-input {
+    flex-direction: column;
+  }
+
+  .ai-chat-input button {
+    width: 100%;
+  }
+
+  .ai-chat-message {
+    max-width: 95%;
+  }
+}
+/* ===== MOBILE RESPONSIVENESS ===== */
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+    margin-top: 20px;
+  }
+}
+/* ===== MOBILE DASHBOARD FIX ===== */
+@media (max-width: 600px) {
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+    gap: 16px;
+    box-sizing: border-box;
+  }
+
+  .grid > .card {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .grid input,
+  .grid button {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
+/* ===== GLOBAL RESPONSIVE FIX ===== */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.app {
+  width: 100%;
+  max-width: 1440px;
+}
+
+@media (max-width: 600px) {
+  .app {
+    padding: 16px;
+  }
+}
+
+
+
+
+</style>
+</head>
+
+<body>
+  <main class="app">
+    <header>
+      <div class="brand">✦ CampusPilot AI</div>
+      <div class="tag">YOUR STUDENT COMPANION</div>
+    </header>
+
+
+    <section class="welcome-section">
+      <span class="coach-tag">✦ YOUR PERSONAL AI STUDY SPACE</span>
+
+      <h1>Plan your day. Achieve your goals.</h1>
+
+      <p class="muted">
+        Stay focused, track your progress, and build your future.
+      </p>
+    </section>
+    <!-- Daily Study Goal -->
+    <section class="overview-card daily-goal-card">
+      <span class="overview-icon">🎯</span>
+      <p>Daily Study Goal</p>
+      <h2 id="daily-goal-time">0 / 8 hours</h2>
+
+      <div class="goal-progress-track">
+        <div id="daily-goal-progress" class="goal-progress-fill"></div>
+      </div>
+
+      <p id="daily-goal-message">Let's reach your 8-hour goal!</p>
+    </section>
+
+    <!-- Dashboard Overview -->
+    <section class="overview-grid">
+
+      <div class="overview-card">
+        <span class="overview-icon">◷</span>
+        <p>Study Time Today</p>
+        <h2 id="overview-study-time">0 min</h2>
+      </div>
+
+      <div class="overview-card">
+        <span class="overview-icon">✓</span>
+        <p>Tasks Completed</p>
+        <h2 id="overview-tasks">0 / 0</h2>
+      </div>
+
+      <div class="overview-card">
+        <span class="overview-icon">↗</span>
+        <p>Today's Productivity</p>
+        <h2 id="overview-productivity">0%</h2>
+      </div>
+
+      <div class="overview-card">
+        <span class="overview-icon">▦</span>
+        <p>Active Days This Week</p>
+        <h2 id="overview-active-days">0 / 7</h2>
+      </div>
+
+    </section>
+
+<!-- Study Streak Tracker -->
+<section class="streak-card">
+  <div class="streak-header">
+    <div>
+      <span class="coach-tag">CONSISTENCY TRACKER</span>
+      <h3>🔥 Study Streak</h3>
+      <p>Build consistency, one day at a time.</p>
+    </div>
+  </div>
+
+  <div class="streak-stats">
+    <div>
+      <p>Current Streak</p>
+      <h2 id="current-streak">0 days</h2>
+    </div>
+
+    <div>
+      <p>Longest Streak</p>
+      <h2 id="longest-streak">0 days</h2>
+    </div>
+  </div>
+
+  <h4>Last 7 Days</h4>
+  <div id="streak-calendar" class="streak-calendar"></div>
+  <div class="streak-milestone">
+    <h4>🏆 Your Milestones</h4>
+    <p id="streak-milestone-message">
+      Keep studying to unlock your first milestone!
+    </p>
+    <div id="streak-milestone-progress"></div>
+</div>
+</section>
+<!-- ACHIEVEMENT SYSTEM -->
+<section class="streak-card achievement-card">
+  <div class="streak-header">
+    <span class="coach-tag">YOUR REWARDS</span>
+    <h3>🏆 Achievements</h3>
+    <p>Celebrate every milestone in your learning journey.</p>
+  </div>
+
+  <div id="achievement-list" class="achievement-list"></div>
+
+  <p id="achievement-summary">
+    Start completing goals to unlock achievements!
+  </p>
+</section>
+
+<section class="grid">
+
+      <!-- Goals -->
+      <div class="card">
+        <h3>🎯 My Goals</h3>
+        <p>What do you want to achieve?</p>
+        <input id="goal-input" placeholder="Enter your main goal" />
+        <button id="save-goal">Save goal</button>
+        <p id="goal-output">No goal added yet.</p>
+      </div>
+
+      <!-- Daily Planner -->
+      <div class="card">
+        <h3>📅 24-Hour Daily Planner</h3>
+        <p>Plan your day, one activity at a time.</p>
+
+        <input
+          id="schedule-title"
+          type="text"
+          placeholder="Activity (e.g. DSA practice)"
+        />
+
+        <label for="schedule-start">Start time</label>
+        <input id="schedule-start" type="time" />
+
+        <label for="schedule-end">End time</label>
+        <input id="schedule-end" type="time" />
+
+        <button id="add-schedule">Add to schedule</button>
+        <div id="schedule-list"></div>
+      </div>
+      <!-- AI STUDY PLANNER -->
+      <div class="card ai-planner-card">
+        <span class="coach-tag">SMART PLANNING</span>
+        <h3>🧠 AI Study Planner</h3>
+        <p>Generate a personalized study plan for your day.</p>
+
+        <label for="ai-study-goal">What do you want to achieve?</label>
+        <input
+          id="ai-study-goal"
+          type="text"
+          placeholder="e.g. Complete arrays and recursion"
+        />
+
+        <label for="ai-study-hours">Available study hours</label>
+        <input
+          id="ai-study-hours"
+          type="number"
+          min="1"
+          max="12"
+          placeholder="e.g. 4"
+        />
+
+        <button id="generate-ai-plan">
+          ✨ Generate Study Plan
+        </button>
+
+        <div id="ai-plan-output"></div>
+        <button id="add-ai-plan" style="display: none;">
+          📅 Add Plan to My Schedule
+        </button>
+      </div>
+
+      <!-- Tasks -->
+      <!-- Daily Tasks -->
+<div class="card tasks-card">
+  <div class="tasks-header">
+    <div>
+      <span class="coach-tag">DAILY PRODUCTIVITY</span>
+      <h3>✅ Daily Tasks</h3>
+      <p>Small steps. Big achievements.</p>
+    </div>
+    <div class="tasks-icon">✓</div>
+  </div>
+
+  <div class="task-progress-info">
+    <span>Daily Progress</span>
+    <strong id="task-progress-text">0 / 0 completed</strong>
+  </div>
+
+  <div class="progress-track">
+    <div id="task-progress-bar" class="progress-fill"></div>
+  </div>
+
+  <div class="task-input-area">
+    <input id="task-input" placeholder="What needs to be done?" />
+    <button id="add-task">+ Add task</button>
+  </div>
+
+  <div id="task-list"></div>
+  <!-- AI TASK PRIORITIZATION -->
+  <div class="ai-priority-section">
+    <span class="coach-tag">SMART TASK MANAGEMENT</span>
+    <h3>🧠 AI Task Prioritization</h3>
+    <p>Let AI help you decide what to work on first.</p>
+
+    <button id="prioritize-tasks">
+      ✨ Prioritize My Tasks
+    </button>
+
+    <div id="task-priority-output"></div>
+  </div>
+</div>
+
+
+      <!-- Monthly Analytics -->
+      <div class="card analytics-card">
+        <span class="coach-tag">YOUR MONTHLY JOURNEY</span>
+        <h3>📊 Monthly Analytics</h3>
+        <p>See how your productivity improves over time.</p>
+
+        <h4>📚 Daily Study Hours</h4>
+        <div id="study-chart"></div>
+
+        <h4>✅ Completed Tasks</h4>
+        <div id="tasks-chart"></div>
+
+        <h4>📈 Daily Productivity</h4>
+        <div id="productivity-chart"></div>
+        <hr>
+
+        <h3>📅 Weekly Progress Report</h3>
+        <p class="muted">Your progress over the last 7 days.</p>
+
+        <div id="weekly-report">
+          <p class="muted">Your weekly report will appear here.</p>
+        </div>
+        <h3>📊 Weekly Study Hours</h3>
+        <p class="muted">Compare your study time across the last 7 days.</p>
+
+        <div id="weekly-study-chart"></div>
+      </div>
+
+        <!-- AI DAILY PERFORMANCE INSIGHTS -->
+        <div class="card ai-insights-card">
+          <span class="coach-tag">YOUR AI PERFORMANCE COACH</span>
+          <h3>🧠 AI Daily Performance Insights</h3>
+          <p>Understand your progress and discover how to improve.</p>
+
+          <button id="generate-ai-insights">
+            ✨ Analyze My Performance
+          </button>
+
+          <div id="ai-insights-output">
+            <p class="muted">
+              Your personalized AI performance report will appear here.
+            </p>
+          </div>
+        </div>
+
+
+
+
+      </div>
+
+
+       <!-- Timer -->
+      <div class="card timer-card">
+        <h3>⏱ Time Tracker</h3>
+        <p>Record your focused study sessions.</p>
+
+        <p id="timer-display">00:00:00</p>
+        <label for="session-label">What are you studying?</label>
+        <input
+          id="session-label"
+          type="text"
+          placeholder="e.g. DSA, C++, Python, College work"
+        />
+
+        <button id="timer-start">Start</button>
+        <button id="timer-pause" class="secondary">Pause</button>
+        <button id="timer-stop" class="secondary">Finish Session</button>
+
+
+
+
+        <p id="timer-status">Timer is stopped.</p>
+        <hr>
+
+        <h4>📚 Study Session History</h4>
+        <p class="muted">Your recently completed study sessions.</p>
+
+        <div id="session-history">
+          <p class="muted">No study sessions recorded yet.</p>
+        </div>
+        <!-- POMODORO FOCUS TIMER -->
+        <div class="card pomodoro-card">
+          <span class="coach-tag">DEEP WORK MODE</span>
+          <h3>🍅 Pomodoro Focus Timer</h3>
+          <p>Focus deeply. Take breaks. Repeat.</p>
+
+          <div class="pomodoro-modes">
+            <button id="pomodoro-focus" class="active">Focus</button>
+            <button id="pomodoro-short">Short Break</button>
+            <button id="pomodoro-long">Long Break</button>
+          </div>
+
+          <h2 id="pomodoro-display">25:00</h2>
+          <p id="pomodoro-status">Ready for a focus session?</p>
+
+          <div class="pomodoro-controls">
+            <button id="pomodoro-start">Start</button>
+            <button id="pomodoro-pause" class="secondary">Pause</button>
+            <button id="pomodoro-reset" class="secondary">Reset</button>
+          </div>
+
+          <p id="pomodoro-sessions">Focus sessions completed: 0</p>
+        </div>
+      </div>
+
+      <!-- Focus Coach -->
+
+      <!-- Focus Coach -->
+      <div class="card coach-card">
+        <div class="coach-header">
+          <div>
+            <span class="coach-tag">✦ AI POWERED</span>
+            <h3>🧠 AI Focus Coach</h3>
+            <p>Your personal productivity intelligence.</p>
+          </div>
+          <div class="coach-icon">✦</div>
+        </div>
+
+        <div class="coach-content">
+        <p>Ready to review your progress?</p>
+        <button id="coach-button">✦ Review my progress</button>
+        <div id="coach-output">
+          Add goals and tasks to get started.
+        </div>
+
+        <div class="smart-suggestions">
+          <h4>✦ Smart Study Suggestions</h4>
+
+          <p id="smart-suggestion-output">
+            Your personalized study suggestions will appear here.
+          </p>
+
+          <button id="generate-smart-suggestions">
+            ✨ Generate AI Recommendations
+          </button>
+        </div>
+
+        <!-- AI CHAT STUDY ASSISTANT -->
+        <div class="card ai-chat-card">
+          <span class="coach-tag">YOUR PERSONAL AI MENTOR</span>
+          <h3>💬 AI Chat Study Assistant</h3>
+          <p>Ask questions about programming, DSA and your learning journey.</p>
+
+          <div id="ai-chat-messages">
+            <div class="ai-chat-message assistant">
+              Hello! I'm your CampusPilot AI study assistant.
+              What would you like to learn today?
+            </div>
+          </div>
+
+          <div class="ai-chat-input">
+            <input
+              id="ai-chat-input"
+              type="text"
+              placeholder="Ask me anything about your studies..."
+            />
+
+            <button id="ai-chat-send">
+              Send
+            </button>
+          </div>
+        </div>
+
+
+
+        </div>
+      </div>
+
+
+
+    </section>
+
+    <p id="status">CampusPilot AI is starting...</p>
+  </main>
+</body>
+</html>
